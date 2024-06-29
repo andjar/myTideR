@@ -1,0 +1,16 @@
+tags: $:/tags/ViewTemplate
+title: $:/tide/views/file
+type: text/vnd.tiddlywiki
+
+<$list filter="[<currentTiddler>prefix[$:/tides/File/]]">
+<h2>File information</h2>
+
+<h3><a href={{!!file_path}}>Open file</a> (<a href={{!!file_folder}}>Open file location</a>)</h3>
+
+<table>
+<tr><th>Creation date:</th><td><$link to={{!!file_parent_folder}} /></td></tr>
+<tr><th>Addition date:</th><td><$link to={{!!file_added}} /></td></tr>
+<tr><th>File size:</th><td>{{!!file_size}}</td></tr>
+<tr><th>File type:</th><td>{{!!file_type}}</td></tr>
+</table>
+</$list>

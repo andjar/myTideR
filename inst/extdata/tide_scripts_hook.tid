@@ -1,0 +1,69 @@
+caption: Hook actions
+tags: DoNotRun
+title: $:/tide/scripts/hook
+type: text/vnd.tiddlywiki
+
+```r
+default_hook <- function(keyword, value, tiddlers, tides, relevant_tiddler_title, content) {
+  
+  # Create new tiddler with content
+  new_tiddler_title <- paste0("$:/tides/hook/", tolower(keyword), "/", uuid::UUIDgenerate())
+  put_tiddler(
+    title = new_tiddler_title,
+    text  = value,
+    fields = list(
+      hook_keyword = keyword,
+      hook_tiddler = relevant_tiddler_title,
+      hook_date = format(Sys.Date(), "%Y-%m-%d")
+    )
+  )
+  
+  text_to_replace <- paste0(keyword, "::", value, "::")
+  text_to_insert  <-  paste0("{{", new_tiddler_title, "||", "$:/tides/hook/", tolower(keyword), "}}")
+  
+  new_content <- gsub(text_to_replace, text_to_insert, content, fixed = TRUE)
+  put_tiddler(
+    title = relevant_tiddler_title,
+    text = new_content
+  )
+  
+  if(!paste0("$:/tides/hook/", tolower(keyword)) %in% tides$title) {
+    put_tiddler(
+      title = paste0("$:/tides/hook/", tolower(keyword)),
+      text = "{{!!text}}"
+    )
+  }
+  
+  return(new_content)
+}
+
+hook <- function(tiddlers, tides) {
+  relevant_tiddlers <- tiddlers[grepl("::", tiddlers$text, fixed = TRUE)]
+  for (i in seq_len(nrow(relevant_tiddlers))) {
+    content <- relevant_tiddlers$text[i]
+    relevant_tiddler_title <- relevant_tiddlers$title[i]
+    
+    # Find and extract the pattern KEYWORD::...:: (where KEYWORD can be any single word)
+    pattern <- "(\\w+)::([^:]+(?:[^:]+)*)::"
+    matches <- gregexpr(pattern, content, perl = TRUE)
+    match_list <- regmatches(content, matches)[[1]]
+    
+    if (length(match_list) > 0) {
+      for (match in match_list) {
+        hits <- strsplit(match, "::", fixed = TRUE)
+        keyword <- hits[[1]][[1]]
+        value <- hits[[1]][[2]]
+        
+        if (keyword == "custom_hook") {
+          
+        } else {
+          content <- default_hook(keyword, value, tiddlers, tides, relevant_tiddler_title, content)
+        }
+        
+      }
+    }
+  }
+}
+
+hook(tiddlers, tides)
+```

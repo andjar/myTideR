@@ -1,0 +1,11 @@
+caption: News
+title: $:/tide/tabs/RSS
+type: text/vnd.tiddlywiki
+
+<ul><small>
+<$list filter="[rss_date<currentTiddler>!sort[rss_dc_date]limit[10]]">
+<li>
+<strong><$text text={{{ [<currentTiddler>get[rss_dc_date]split[T]last[]split[Z]first[]] }}} /></strong>: {{!!caption}} (<a href={{!!rss_link}}>{{!!rss_publisher}}</a>)
+</li>
+</$list>
+</small></ul>

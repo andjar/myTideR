@@ -1,0 +1,70 @@
+caption: Archive web reference
+title: $:/tide/scripts/web
+tags: DoNotRun
+type: text/vnd.tiddlywiki
+
+```r
+replace_patterns <- function(string, dt) {
+  for (i in 1:nrow(dt)) {
+    string <- gsub(dt$reference[i], dt$target_tiddler[i], string, fixed = TRUE)
+  }
+  return(string)
+}
+
+web_archive <- function(tiddlers, tides) {
+  relevant_tiddlers <- tiddlers[grepl("http", reference, fixed = TRUE)]
+  existing_titles <- tides[grepl("$:/tides/Web/", title), title]
+  
+  relevant_urls <- rbindlist(lapply(seq_len(nrow(relevant_tiddlers)), function(i) {
+    tiddler <- relevant_tiddlers[i, ]
+    references <- stringr::str_split(tiddler$reference, " ")
+    data.table(
+      tiddler = tiddler$title,
+      reference = purrr::flatten(references)
+    )
+  }))
+  
+  relevant_urls <- relevant_urls[grepl("http", reference), ]
+  relevant_urls[, target_tiddler := paste0("$:/tides/Web/", reference)]
+  relevant_urls[, target_tiddler := gsub("http://", "", target_tiddler, fixed = TRUE)]
+  relevant_urls[, target_tiddler := gsub("https://", "", target_tiddler, fixed = TRUE)]
+  relevant_urls <- relevant_urls[!target_tiddler %in% existing_titles, ]
+  
+  full_file_path <- normalizePath(file.path(tides[title == "$:/tide/settings/path", text], "web-archive"), mustWork = FALSE)
+  
+  out_files <- lapply(seq_len(nrow(relevant_urls)), function(i) {
+    out_file <- paste0(uuid::UUIDgenerate(), ".html")
+    get_url <- relevant_urls$reference[i]
+    system(paste0("single-file --output-directory ", full_file_path, " ", get_url, " ", out_file))
+    out_file
+  })
+  
+  relevant_urls$out_file <- out_files
+  for(i in seq_len(nrow(relevant_urls))) {
+    
+    # New web page
+    put_tiddler(title = relevant_urls$target_tiddler,
+                text = "",
+                type = "text/vnd.tiddlywiki",
+                fields = list(
+                  caption = relevant_urls$reference,
+                  web_date = format(Sys.Date(), "%Y-%m-%d"),
+                  web_file_name = relevant_urls$out_file,
+                  web_file_path = normalizePath(file.path(full_file_path, relevant_urls$out_file), mustWork = FALSE)
+                ))
+    
+  }
+  
+  # Replace reference url with archived tiddler
+  lapply(seq_len(nrow(relevant_tiddlers)), function(i) {
+    put_tiddler(title = relevant_tiddlers$title[i],
+                fields = list(
+                  reference = replace_patterns(relevant_tiddlers$reference[i], relevant_urls)
+                ))
+    
+    
+  })
+}
+
+web_archive(tiddlers, tides)
+```

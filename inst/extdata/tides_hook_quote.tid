@@ -1,0 +1,7 @@
+caption: Quote
+title: $:/tides/hook/quote
+type: text/vnd.tiddlywiki
+
+<blockquote>
+{{!!text}}
+</blockquote>

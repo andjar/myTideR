@@ -1,0 +1,11 @@
+tags: $:/tags/ViewTemplate
+title: $:/tide/views/journal
+type: text/vnd.tiddlywiki
+
+<$list filter="[<currentTiddler>tag[Journal]]">
+<hr />
+<details>
+<summary>Tides of today</summary>
+<<tabs "[prefix[$:/tide/tabs]]" "" "" "tc-vertical">>
+</details>
+</$list>

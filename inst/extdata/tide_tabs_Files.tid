@@ -1,0 +1,33 @@
+caption: Files
+title: $:/tide/tabs/Files
+type: text/vnd.tiddlywiki
+
+!!! Files added today
+<small>
+<table>
+<tr>
+<th>File</th><th>Type</th>
+</tr>
+<$list filter="[prefix[$:/tides/File]file_added<currentTiddler>]">
+<tr>
+<td><$link>{{!!file_name}}</$link> (<a href={{!!file_path}}>Open file</a>)</td>
+<td>{{!!file_type}}</td>
+</tr>
+</$list>
+</table>
+</small>
+
+!!! Files created today
+<small>
+<table>
+<tr>
+<th>File</th><th>Type</th>
+</tr>
+<$list filter="[prefix[$:/tides/File]file_parent_folder<currentTiddler>]">
+<tr>
+<td><$link>{{!!file_name}}</$link> (<a href={{!!file_path}}>Open file</a>)</td>
+<td>{{!!file_type}}</td>
+</tr>
+</$list>
+</table>
+</small>

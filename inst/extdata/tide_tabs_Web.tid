@@ -1,0 +1,14 @@
+caption: Web pages
+title: $:/tide/tabs/Web
+type: text/vnd.tiddlywiki
+
+!!! Web pages archived today
+<small>
+<table>
+<$list filter="[prefix[$:/tides/Web]web_date<currentTiddler>]">
+<tr>
+<td><$link to=<<currentTiddler>> ><$view field="caption"/></$link> (<a href={{!!caption}}>Original</a>)</td>
+</tr>
+</$list>
+</table>
+</small>

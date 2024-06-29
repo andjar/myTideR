@@ -1,0 +1,59 @@
+caption: Import RSS feeds
+title: $:/tide/scripts/RSS
+tags: DoNotRun
+type: text/vnd.tiddlywiki
+
+```r
+import_RSS <- function(tiddlers, tides) {
+  # Find pre-existing RSS tiddlers
+  existing_tiddlers <- tides[grepl("$:/tides/RSS/", title, fixed = TRUE)]
+  existing_hashes <- ifelse(nrow(existing_tiddlers) > 0,
+    sapply(existing_tiddlers, function(x) paste(x$link, x$title)),
+    "")
+
+  # Find RSS channels
+  RSS_channels <- tides[grepl("$:/tide/settings/RSS", title, fixed = TRUE)]
+
+  for (i in seq_len(nrow(RSS_channels))) {
+    # Download the RSS feed
+    response <- httr::GET(RSS_channels$rss_url[i])
+    if (httr::status_code(response) != 200) {
+      stop("Failed to download RSS feed.")
+    }
+
+    # Parse the RSS feed
+    rss_content <- httr::content(response, as = "text")
+    rss <- xml2::read_xml(rss_content)
+
+    # Extract items from the RSS feed
+    items <- xml2::xml_find_all(rss, "//item")
+
+    # Loop through each item and create a tiddler
+    for (item in items) {
+      title <- xml2::xml_text(xml2::xml_find_first(item, "title"))
+      link <- xml2::xml_text(xml2::xml_find_first(item, "link"))
+      description <- xml2::xml_text(xml2::xml_find_first(item, "description"))
+      pubDate <- xml2::xml_text(xml2::xml_find_first(item, "pubDate"))
+      dc_date <- xml2::xml_text(xml2::xml_find_first(item, "dc:date"))
+
+      if (!paste0(paste(link, title)) %in% existing_hashes) {
+        # Define tiddler fields
+        put_tiddler(title = paste0("$:/tides/RSS/", uuid::UUIDgenerate()),
+                    text = description,
+                    type = "text/vnd.tiddlywiki",
+                    fields = list(
+                      caption = title,
+                      rss_publisher = RSS_channels$rss_publisher[i],
+                      rss_source = RSS_channels$rss_url[i],
+                      rss_link = link,
+                      rss_pubdate = pubDate,
+                      rss_dc_date = dc_date,
+                      rss_date = substr(dc_date, 1, 10)
+                    ))
+      }
+    }
+  }
+}
+
+import_RSS(tiddlers, tides)
+```
