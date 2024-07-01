@@ -1,0 +1,13 @@
+tags: $:/tags/ViewTemplate
+title: $:/tide/views/mail
+type: text/vnd.tiddlywiki
+
+<$list filter="[<currentTiddler>prefix[$:/tides/mail/]]">
+---
+<h2>Mail attachments</h2>
+<ul>
+<$list filter="[<currentTiddler>get[mail_attachments]enlist-input[]]">
+<li><$link>{{!!caption}}</$link></li>
+</$list>
+</ul>
+</$list>

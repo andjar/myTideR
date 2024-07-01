@@ -8,8 +8,8 @@ init <- function(tidepath = "myTide") {
   cat("\nGotta Tiddl' Em All!\n\n")
   add_filters()
   add_templates()
-  put_tiddler(
-    title = "2024-06-28",
+  rtiddlywiki::put_tiddler(
+    title = format(Sys.Date(), "%Y-%m-%d"),
     text = "",
     tags = "Journal"
   )

@@ -1,5 +1,6 @@
 caption: Import RSS feeds
 title: $:/tide/scripts/RSS
+tide_order: 10
 tags: DoNotRun
 type: text/vnd.tiddlywiki
 

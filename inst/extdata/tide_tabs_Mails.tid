@@ -1,0 +1,33 @@
+caption: Mails
+title: $:/tide/tabs/Mails
+type: text/vnd.tiddlywiki
+
+!!! Mails added today
+<small>
+<table>
+<tr>
+<th>Subject</th><th>From</th>
+</tr>
+<$list filter="[prefix[$:/tides/mail]mail_added<currentTiddler>]">
+<tr>
+<td><$link>{{!!caption}}</$link></td>
+<td>{{!!mail_from}}</td>
+</tr>
+</$list>
+</table>
+</small>
+
+!!! Mails sent/received today
+<small>
+<table>
+<tr>
+<th>Subject</th><th>From</th>
+</tr>
+<$list filter="[prefix[$:/tides/mail]mail_date<currentTiddler>]">
+<tr>
+<td><$link>{{!!caption}}</$link></td>
+<td>{{!!mail_from}}</td>
+</tr>
+</$list>
+</table>
+</small>

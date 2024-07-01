@@ -1,0 +1,57 @@
+caption: Import mails
+tags: DoNotRun
+tide_order: 40
+title: $:/tide/scripts/mail
+type: text/vnd.tiddlywiki
+
+```r
+import_mail <- function(tiddlers, tides) {
+  
+  inbox_path <- normalizePath(file.path(tides[title == "$:/tide/settings/path", text], "inbox"), mustWork = FALSE)
+  files <- list.files(inbox_path, pattern = "*.msg", recursive = TRUE, full.names = TRUE)
+
+  for (file in files) {
+    mail <- msgxtractr::read_msg(file)
+    mail_attachments <- msgxtractr::save_attachments(mail, path = inbox_path, use_short = FALSE)
+    
+    mail_attachment_tiddlers <- lapply(mail_attachments, function(attachment_file) {
+      file_info <- file.info(attachment_file)
+      creation_date <- format(as.POSIXct(file_info$ctime, tz = "UTC"), "%Y%m%d%H%M%S000")
+      modification_date <- format(as.POSIXct(file_info$mtime, tz = "UTC"), "%Y%m%d%H%M%S000")
+      earliest_date <- format(as.POSIXct(
+        min(creation_date, modification_date),
+        format = "%Y%m%d%H%M%S000", tz = "UTC"),
+        "%Y-%m-%d")
+      paste0("[[$:/tides/File/",
+             earliest_date, "/",
+             basename(attachment_file), "]]")
+      
+    })
+    
+    mail_date <- as.POSIXct(strptime(mail$headers$Date, format = "%a, %d %b %Y %H:%M:%S %z"))
+    
+    put_tiddler(
+      title = paste0("$:/tides/mail/", uuid::UUIDgenerate()),
+      text = paste(mail$body$text, collapse = "\n"),
+      type = "text/vnd.tiddlywiki",
+      fields = list(
+        caption = mail$subject,
+        mail_from = mail$headers$From,
+        mail_to = mail$headers$To,
+        mail_cc = mail$headers$CC,
+        mail_message_id = mail$headers$`Message-ID`,
+        mail_date = format(mail_date, "%Y-%m-%d"),
+        mail_time = mail$headers$Date,
+        mail_added = format(Sys.Date(), "%Y-%m-%d"),
+        mail_thread_topic = mail$headers$`Thread-Topic`,
+        mail_thread_index = mail$headers$`Thread-Index`,
+        mail_attachments = paste(mail_attachment_tiddlers, collapse = " ")
+      )
+    )
+  file.remove(file)
+  }
+
+}
+
+import_mail(tiddlers, tides)
+```

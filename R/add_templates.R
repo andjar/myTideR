@@ -45,7 +45,7 @@ add_templates <- function() {
 
   for (file_to_add in files_to_add) {
     tiddler <- parse_tiddler_from_file(file_to_add)
-    put_tiddler(title = tiddler$title,
+    rtiddlywiki::put_tiddler(title = tiddler$title,
                 text = tiddler$text,
                 type = tiddler$type,
                 fields = tiddler$fields)

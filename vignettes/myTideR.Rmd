@@ -31,7 +31,7 @@ Then, with your tiddlywiki server running, open R and run
 
 ```{r setup}
 library(myTideR)
-init("../../my_tide") # path to your tide folder
+init("../my_tide") # path to your tide folder
 ```
 
 The path can be an absolute path or relative to the R working directory. Within this folder, the package will create the following directories:
@@ -105,9 +105,9 @@ The web tide will archive web pages listed in the `reference` fields of your tid
 
 Note: You need to install the `single-file cli` on your system!
 
-### The mail tide (not implemented yet)
+### The mail tide
 
-The mail tide is quite similar to the file tide; drag-and-drop mails from outlook to the `inbox` folder, and the tide will archive the attachments and create a tiddler for the mail itself.
+The mail tide is quite similar to the file tide; drag-and-drop mails from outlook (`.msg`) to the `inbox` folder, and the tide will create a tiddler for the mail itself and archive the attachments (run the file tide).
 
 ## Making custom scripts
 In general, the tide scripts should look like this:

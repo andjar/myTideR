@@ -7,7 +7,7 @@
 create_folders <- function(mypath) {
   folders_to_create <- c("file-archive", "inbox", "outbox", "web-archive")
 
-  put_tiddler(title = "$:/tide/settings/path",
+  rtiddlywiki::put_tiddler(title = "$:/tide/settings/path",
               text = normalizePath(file.path(getwd(), mypath), mustWork = FALSE))
 
   for (folder_to_create in folders_to_create) {

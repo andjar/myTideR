@@ -1,5 +1,6 @@
 caption: Import files
 tags: DoNotRun
+tide_order: 50
 title: $:/tide/scripts/file
 type: text/vnd.tiddlywiki
 

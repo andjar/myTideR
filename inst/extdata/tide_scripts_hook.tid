@@ -1,5 +1,6 @@
 caption: Hook actions
 tags: DoNotRun
+tide_order: 100
 title: $:/tide/scripts/hook
 type: text/vnd.tiddlywiki
 
