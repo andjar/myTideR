@@ -20,3 +20,6 @@ Suggests:
     msgxtractr
 VignetteBuilder: knitr
 URL: https://andjar.github.io/myTideR/
+Remotes:
+    hrbrmstr/msgxtractr,
+    andjar/rtiddlywiki
