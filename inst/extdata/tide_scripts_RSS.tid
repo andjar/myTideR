@@ -1,6 +1,7 @@
 caption: Import RSS feeds
 title: $:/tide/scripts/RSS
 tide_order: 10
+tide_recipe: tide-RSS
 tags: DoNotRun
 type: text/vnd.tiddlywiki
 
@@ -11,6 +12,9 @@ import_RSS <- function(tiddlers, tides) {
   existing_hashes <- ifelse(nrow(existing_tiddlers) > 0,
     sapply(existing_tiddlers, function(x) paste(x$link, x$title)),
     "")
+
+    mws <- tides[title == "$:/tide/settings/mws", text] == "yes"
+    recipe <- ifelse(mws, tides[title == "$:/tide/scripts/RSS", tide_recipe], "default")
 
   # Find RSS channels
   RSS_channels <- tides[grepl("$:/tide/settings/RSS", title, fixed = TRUE)]
@@ -50,7 +54,7 @@ import_RSS <- function(tiddlers, tides) {
                       rss_pubdate = pubDate,
                       rss_dc_date = dc_date,
                       rss_date = substr(dc_date, 1, 10)
-                    ))
+                    ), recipe = recipe)
       }
     }
   }

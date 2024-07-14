@@ -1,37 +1,52 @@
-#' Import and run tides
+#' Import and Run Tides
 #'
-#' This function runs the tides in your tiddlywiki
+#' This function imports and runs the tides in your TiddlyWiki environment.
+#' It retrieves the tides and their associated scripts, and executes them in order,
+#' with an option to force run scripts tagged with `DoNotRun`.
 #'
-#' @param force_run Also run scripts tagged with `DoNotRun`
+#' @param force_run Logical. If TRUE, also runs scripts tagged with `DoNotRun`. Default is FALSE.
+#' @param mws Logical. If TRUE, sets the TiddlyWiki options to use the "tides" recipe for a MultiWikiServer. Default is FALSE.
 #' @export
-run_tides <- function(force_run = FALSE) {
+#'
+#' @examples
+#' # Run tides with default settings
+#' run_tides()
+#'
+#' # Run tides and force scripts tagged with `DoNotRun` to run
+#' run_tides(force_run = TRUE)
+#'
+#' # Run tides in MultiWikiServer mode
+#' run_tides(mws = TRUE)
+run_tides <- function(force_run = FALSE, mws = FALSE) {
   library("rtiddlywiki")
   library("data.table")
 
   rtiddlywiki::tw_options(host = "http://127.0.0.1:8080/")
 
-  # Fetch existing tiddlers
-  tiddlers <- as.data.table(rbindlist(rtiddlywiki::get_tiddlers(), fill = TRUE))
-
-  if (nrow(tiddlers) > 0) {
-    for (i in seq_len(nrow(tiddlers))) {
-      t_text <- rtiddlywiki::get_tiddler(tiddlers$title[i])$text
-      if (is.character(t_text)) {
-        set(tiddlers, i, "text", t_text)
-      }
-    }
+  if (mws) {
+    rtiddlywiki::tw_options(recipe = "tides")
   }
 
   # Fetch existing tides
-  tides <- as.data.table(rbindlist(rtiddlywiki::get_tiddlers(filter = "[prefix[$:/tide]]"), fill = TRUE))
+  tides_titles <- as.data.table(rbindlist(rtiddlywiki::get_tiddlers(filter = "[prefix[$:/tide]]"), fill = TRUE))
+  tides <- rbindlist(lapply(seq_along(tides_titles$title), function(i) {
+    as.data.table(rtiddlywiki::get_tiddler(tides_titles$title[i]))
+  }), fill = TRUE)
+  mws <- tides[title == "$:/tide/settings/mws", text] == "yes"
+  if (any(colnames(tides) == "tide_order")) {
+    tides[, tide_order := as.numeric(tide_order)]
+  }
 
+  # Fetch existing tiddlers
+  tiddler_titles <- as.data.table(rbindlist(rtiddlywiki::get_tiddlers(), fill = TRUE))
+
+  # Fetch existing contents
+  tiddlers <- rbindlist(lapply(seq_along(tiddler_titles$title), function(i) {
+    as.data.table(rtiddlywiki::get_tiddler(tiddler_titles$title[i]))
+  }), fill = TRUE)
+
+  # Run tides
   if (nrow(tides) > 0) {
-    for (i in seq_len(nrow(tides))) {
-      t_text <- rtiddlywiki::get_tiddler(tides$title[i])$text
-      if (is.character(t_text)) {
-        set(tides, i, "text", t_text)
-      }
-    }
     script_tiddlers <- tides[grepl("$:/tide/scripts", tides$title, fixed = TRUE), ]
     script_tiddlers <- script_tiddlers[order(script_tiddlers$tide_order), ]
 

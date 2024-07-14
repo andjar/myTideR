@@ -1,12 +1,10 @@
 Package: myTideR
-Title: What the Package Does (One Line, Title Case)
+Title: myTideR: Gotta Tiddl' Em All!
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Anders H.", "Jarmund", , "ajarmund@gmail.com", role = c("aut", "cre"))
+Description: Use R to expand your TiddlyWiki through automatic actions called tides.
+License: GPL (>= 3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.1
@@ -14,9 +12,11 @@ Imports:
     rtiddlywiki,
     xml2,
     httr,
-    data.table
+    data.table,
+    processx
 Suggests: 
     knitr,
     rmarkdown,
     msgxtractr
 VignetteBuilder: knitr
+URL: https://andjar.github.io/myTideR/

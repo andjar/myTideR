@@ -2,13 +2,27 @@
 % Please edit documentation in R/run_tides.R
 \name{run_tides}
 \alias{run_tides}
-\title{Import and run tides}
+\title{Import and Run Tides}
 \usage{
-run_tides(force_run = FALSE)
+run_tides(force_run = FALSE, mws = FALSE)
 }
 \arguments{
-\item{force_run}{Also run scripts tagged with \code{DoNotRun}}
+\item{force_run}{Logical. If TRUE, also runs scripts tagged with \code{DoNotRun}. Default is FALSE.}
+
+\item{mws}{Logical. If TRUE, sets the TiddlyWiki options to use the "tides" recipe for a MultiWikiServer. Default is FALSE.}
 }
 \description{
-This function runs the tides in your tiddlywiki
+This function imports and runs the tides in your TiddlyWiki environment.
+It retrieves the tides and their associated scripts, and executes them in order,
+with an option to force run scripts tagged with \code{DoNotRun}.
+}
+\examples{
+# Run tides with default settings
+run_tides()
+
+# Run tides and force scripts tagged with `DoNotRun` to run
+run_tides(force_run = TRUE)
+
+# Run tides in MultiWikiServer mode
+run_tides(mws = TRUE)
 }

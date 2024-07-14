@@ -1,0 +1,85 @@
+# import_youtube_history <- function(tiddlers, tides) {
+# library("data.table")
+# library("rvest")
+# library("xml2")
+# library("dplyr")
+#
+# inbox_path <- normalizePath(file.path(tides[title == "$:/tide/settings/path", text], "inbox"), mustWork = FALSE)
+# files <- list.files(inbox_path, pattern = "watch-history.html", recursive = TRUE, full.names = TRUE)
+# html_content <- read_html(files)
+# file.remove(files)
+#
+# # Extract all elements with class "content-cell mdl-cell mdl-cell--6-col mdl-typography--body-1"
+# content_cells <- html_content %>%
+#   html_elements("div.content-cell.mdl-cell.mdl-cell--6-col.mdl-typography--body-1")
+#
+# # Function to process each content cell
+# process_cell <- function(cell) {
+#   # Extract the text of the first link (video title)
+#   video_title <- tryCatch({
+#     cell %>% html_element("a") %>% html_text()
+#   }, error = function(e) NA_character_)
+#
+#   # Extract the href of the first link (video URL)
+#   video_url <- tryCatch({
+#     cell %>% html_element("a") %>% html_attr("href")
+#   }, error = function(e) NA_character_)
+#
+#   # Extract the text of the second link (channel name)
+#   channel_name <- tryCatch({
+#     links <- cell %>% html_elements("a")
+#     if (length(links) >= 2) {
+#       links[[2]] %>% html_text()
+#     } else {
+#       NA_character_
+#     }
+#   }, error = function(e) NA_character_)
+#
+#   # Extract the date/time
+#   datetime <- tryCatch({
+#     cell %>%
+#       html_text()
+#   }, error = function(e) NA_character_)
+#
+#   # Return as a list
+#   list(
+#     video_title = video_title,
+#     video_url = video_url,
+#     channel_name = channel_name,
+#     datetime = datetime
+#   )
+# }
+#
+# # Apply the function to all content cells
+# results <- lapply(content_cells, process_cell)
+#
+# # Convert to a data frame
+# results_df <- as.data.table(bind_rows(results))
+# results_df <- results_df[!is.na(video_url)]
+#
+#   for (i in seq_len(nrow(results_df))) {
+#     tmp_title <- strsplit(results_df$video_url[i], "?", fixed = TRUE)[[1]][[2]]
+#     tmp_title <- substr(tmp_title, 3, nchar(tmp_title))
+#     date_string <- substr(
+#       gsub(results_df$video_title[i],
+#            "",
+#            results_df$datetime[i],
+#            fixed = TRUE),
+#       10, 37)
+#     posix_date <- as.POSIXct(strptime(date_string, format="%d. %B %Y, %H:%M:%S", tz="CEST"))
+#     rtiddlywiki::put_tiddler(
+#        title = paste0("$:/tides/youtube-history/", tmp_title),
+#        text = description,
+#        type = "text/vnd.tiddlywiki",
+#        fields = list(
+#          caption = results_df$video_title[i],
+#          youtube_url = results_df$video_url[i],
+#          youtube_channel = results_df$channel_name[i],
+#          youtube_added = format(Sys.Date(), "%Y-%m-%d"),
+#          youtube_watched = format(posix_date, "%Y-%m-%d"),
+#          youtube_watched_time = format(posix_date, "%H:%M:%S")
+#        ))
+#   }
+# }
+#
+# import_youtube_history(tiddlers, tides)

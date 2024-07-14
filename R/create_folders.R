@@ -1,14 +1,11 @@
-#' Create Folders
+#' Create Folder Structure
 #'
-#' This function creates a folder structure at the specified relative path.
+#' This internal function creates a specific folder structure at the specified relative path.
 #'
-#' @param mypath A relative path from the current working directory where the folders should be created.
-#' @export
+#' @param mypath Character. A relative path from the current working directory where the folders should be created.
+#' @keywords internal
 create_folders <- function(mypath) {
   folders_to_create <- c("file-archive", "inbox", "outbox", "web-archive")
-
-  rtiddlywiki::put_tiddler(title = "$:/tide/settings/path",
-              text = normalizePath(file.path(getwd(), mypath), mustWork = FALSE))
 
   for (folder_to_create in folders_to_create) {
 

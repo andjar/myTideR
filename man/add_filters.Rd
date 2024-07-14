@@ -2,10 +2,15 @@
 % Please edit documentation in R/add_filters.R
 \name{add_filters}
 \alias{add_filters}
-\title{Allow certain filters via api}
+\title{Add Specific Filters to TiddlyWiki Server}
 \usage{
-add_filters()
+add_filters(mws = FALSE)
+}
+\arguments{
+\item{mws}{Logical. If TRUE, sets the TiddlyWiki options to use the "tide" recipe for a MultiWikiServer.. Default is FALSE.}
 }
 \description{
-This function adds specific tiddler to the server that later allow you to do filtering
+This internal function adds a specific set of filters to the TiddlyWiki server,
+enabling filtering functionality via the API.
 }
+\keyword{internal}

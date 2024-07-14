@@ -1,4 +1,4 @@
-add_templates <- function() {
+add_templates <- function(mws = FALSE) {
   parse_tiddler_from_file <- function(file_path) {
     # Read the entire file
     lines <- readLines(file_path)
@@ -45,9 +45,23 @@ add_templates <- function() {
 
   for (file_to_add in files_to_add) {
     tiddler <- parse_tiddler_from_file(file_to_add)
-    rtiddlywiki::put_tiddler(title = tiddler$title,
-                text = tiddler$text,
-                type = tiddler$type,
-                fields = tiddler$fields)
-  }
+
+    if (!is.null(tiddler$fields[["tags"]])) {
+      all_tags <- tiddler$fields[["tags"]]
+      tiddler$fields[["tags"]] <- NULL
+      rtiddlywiki::put_tiddler(title = tiddler$title,
+                               text = tiddler$text,
+                               tags = all_tags,
+                               type = tiddler$type,
+                               fields = tiddler$fields,
+                               recipe = ifelse(mws, "tide", "default"))
+    } else {
+      rtiddlywiki::put_tiddler(title = tiddler$title,
+                               text = tiddler$text,
+                               type = tiddler$type,
+                               fields = tiddler$fields,
+                               recipe = ifelse(mws, "tide", "default"))
+    }
+    }
+
 }

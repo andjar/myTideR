@@ -2,10 +2,40 @@
 % Please edit documentation in R/init.R
 \name{init}
 \alias{init}
-\title{Initialize myTide}
+\title{Initialize myTide Setup}
 \usage{
-init(tidepath = "myTide")
+init(
+  tidepath = "myTide",
+  mws = FALSE,
+  tiddlywiki = NA,
+  start_date = format(Sys.Date(), "\%Y-\%m-\%d"),
+  end_date = format(Sys.Date(), "\%Y-\%m-\%d"),
+  wikipath = NA
+)
+}
+\arguments{
+\item{tidepath}{Character. The path where the tide folder will be created. Default is "myTide".}
+
+\item{mws}{Logical. Whether to set up the TiddlyWiki server in MultiWikiServer mode. Default is FALSE.}
+
+\item{tiddlywiki}{Character. The path to the TiddlyWiki installation. Default is NA. Only required for MWS.}
+
+\item{start_date}{Character. The start date for journal creation in YYYY-MM-DD format. Default is the current date.}
+
+\item{end_date}{Character. The end date for journal creation in YYYY-MM-DD format. Default is the current date.}
+
+\item{wikipath}{Character. The path where the wiki data will be stored. Default is NA.}
+}
+\value{
+This function does not return a value but sets up the myTide environment.
 }
 \description{
-This function initiates the setup
+This function initializes the setup for the myTide project. It sets up the required folders and configurations,
+and optionally starts a TiddlyWiki server either in MultiWikiServer (MWS) mode or regular mode.
+}
+\examples{
+\dontrun{
+init()
+init(tidepath = "customPath", mws = TRUE, tiddlywiki = "path/to/tiddlywiki")
+}
 }

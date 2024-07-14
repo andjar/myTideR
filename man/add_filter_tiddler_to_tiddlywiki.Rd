@@ -2,13 +2,17 @@
 % Please edit documentation in R/add_filters.R
 \name{add_filter_tiddler_to_tiddlywiki}
 \alias{add_filter_tiddler_to_tiddlywiki}
-\title{Allow certain filters via api}
+\title{Add Filter Tiddlers to TiddlyWiki Server}
 \usage{
-add_filter_tiddler_to_tiddlywiki(allow_filters)
+add_filter_tiddler_to_tiddlywiki(allow_filters, mws = FALSE)
 }
 \arguments{
-\item{allow_filters}{A vector with the filters to allow}
+\item{allow_filters}{Character vector. A vector containing the filters to be added.}
+
+\item{mws}{Logical. If TRUE, sets the TiddlyWiki options to use the "tide" recipe for a MultiWikiServer. Default is FALSE.}
 }
 \description{
-This function adds specific tiddler to the server that later allow you to do filtering
+This internal function adds specified filter tiddlers to the TiddlyWiki server,
+enabling the use of those filters via the API.
 }
+\keyword{internal}

@@ -1,6 +1,7 @@
 caption: Import mails
 tags: DoNotRun
 tide_order: 40
+tide_recipe: tide-mail
 title: $:/tide/scripts/mail
 type: text/vnd.tiddlywiki
 

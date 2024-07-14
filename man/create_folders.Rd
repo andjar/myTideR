@@ -2,13 +2,14 @@
 % Please edit documentation in R/create_folders.R
 \name{create_folders}
 \alias{create_folders}
-\title{Create Folders}
+\title{Create Folder Structure}
 \usage{
 create_folders(mypath)
 }
 \arguments{
-\item{mypath}{A relative path from the current working directory where the folders should be created.}
+\item{mypath}{Character. A relative path from the current working directory where the folders should be created.}
 }
 \description{
-This function creates a folder structure at the specified relative path.
+This internal function creates a specific folder structure at the specified relative path.
 }
+\keyword{internal}

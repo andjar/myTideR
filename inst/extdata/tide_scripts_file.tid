@@ -1,6 +1,7 @@
 caption: Import files
 tags: DoNotRun
 tide_order: 50
+tide_recipe: tide-files
 title: $:/tide/scripts/file
 type: text/vnd.tiddlywiki
 
@@ -70,7 +71,7 @@ get_file_metadata <- function(file_path) {
 }
 
 # Function to create or update a tiddler for a file
-create_or_update_tiddler <- function(file_path, existing_hashes, tiddlers, tides) {
+create_or_update_tiddler <- function(file_path, existing_hashes, tiddlers, tides, recipe) {
   file_name <- basename(file_path)
   file_extension <- file_ext(file_path)
   sfile_hash <- digest(file_path, algo = "sha256")
@@ -145,7 +146,8 @@ create_or_update_tiddler <- function(file_path, existing_hashes, tiddlers, tides
                 text = tiddler$text,
                 type = tiddler$type,
                 tags = tiddler$tags,
-                fields = tiddler$fields)
+                fields = tiddler$fields,
+                recipe = recipe)
   }
   return(tiddler)
 }
@@ -161,8 +163,11 @@ import_files <- function(tiddlers, tides) {
                             sapply(existing_tiddlers, function(x) x$file_hash),
                             "")
 
+  mws <- tides[title == "$:/tide/settings/mws", text] == "yes"
+  recipe <- ifelse(mws, tides[title == "$:/tide/scripts/file", tide_recipe], "default")
+
   for (sfile in files) {
-    create_or_update_tiddler(sfile, existing_hashes, tiddlers, tides)
+    create_or_update_tiddler(sfile, existing_hashes, tiddlers, tides, recipe)
   }
 }
 
