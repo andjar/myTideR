@@ -13,7 +13,8 @@ Imports:
     xml2,
     httr,
     data.table,
-    processx
+    processx,
+    digest
 Suggests: 
     knitr,
     rmarkdown

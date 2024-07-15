@@ -9,12 +9,14 @@ type: text/vnd.tiddlywiki
 import_RSS <- function(tiddlers, tides) {
   # Find pre-existing RSS tiddlers
   existing_tiddlers <- tides[grepl("$:/tides/RSS/", title, fixed = TRUE)]
-  existing_hashes <- ifelse(nrow(existing_tiddlers) > 0,
-    sapply(existing_tiddlers, function(x) paste(x$link, x$title)),
-    "")
+  if (nrow(existing_tiddlers) > 0) {
+    existing_hashes <- sapply(seq_len(nrow(existing_tiddlers)), function(i) paste(existing_tiddlers$link[i], existing_tiddlers$caption[i]))
+  } else {
+    existing_hashes <- ""
+  }
 
-    mws <- tides[title == "$:/tide/settings/mws", text] == "yes"
-    recipe <- ifelse(mws, tides[title == "$:/tide/scripts/RSS", tide_recipe], "default")
+  mws <- tides[title == "$:/tide/settings/mws", text] == "yes"
+  recipe <- ifelse(mws, tides[title == "$:/tide/scripts/RSS", tide_recipe], "default")
 
   # Find RSS channels
   RSS_channels <- tides[grepl("$:/tide/settings/RSS", title, fixed = TRUE)]

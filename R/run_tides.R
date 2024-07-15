@@ -18,8 +18,8 @@
 #' # Run tides in MultiWikiServer mode
 #' run_tides(mws = TRUE)
 run_tides <- function(force_run = FALSE, mws = FALSE) {
-  library("rtiddlywiki")
-  library("data.table")
+  library(rtiddlywiki)
+  library(data.table)
 
   rtiddlywiki::tw_options(host = "http://127.0.0.1:8080/")
 
@@ -29,10 +29,17 @@ run_tides <- function(force_run = FALSE, mws = FALSE) {
 
   # Fetch existing tides
   tides_titles <- as.data.table(rbindlist(rtiddlywiki::get_tiddlers(filter = "[prefix[$:/tide]]"), fill = TRUE))
+
   tides <- rbindlist(lapply(seq_along(tides_titles$title), function(i) {
-    as.data.table(rtiddlywiki::get_tiddler(tides_titles$title[i]))
+    tiddler <- rtiddlywiki::get_tiddler(tides_titles$title[i])
+    if("fields" %in% names(tiddler)) {
+      cbind(as.data.table(tiddler[names(tiddler) != "fields"]),as.data.table(tiddler$fields))
+    } else {
+      as.data.table(tiddler)
+    }
   }), fill = TRUE)
-  mws <- tides[title == "$:/tide/settings/mws", text] == "yes"
+
+  mws <- tides[title == "$:/tide/settings/mws", .(text)] == "yes"
   if (any(colnames(tides) == "tide_order")) {
     tides[, tide_order := as.numeric(tide_order)]
   }
@@ -42,7 +49,12 @@ run_tides <- function(force_run = FALSE, mws = FALSE) {
 
   # Fetch existing contents
   tiddlers <- rbindlist(lapply(seq_along(tiddler_titles$title), function(i) {
-    as.data.table(rtiddlywiki::get_tiddler(tiddler_titles$title[i]))
+    tiddler <- rtiddlywiki::get_tiddler(tiddler_titles$title[i])
+    if("fields" %in% names(tiddler)) {
+      cbind(as.data.table(tiddler[names(tiddler) != "fields"]),as.data.table(tiddler$fields))
+    } else {
+      as.data.table(tiddler)
+    }
   }), fill = TRUE)
 
   # Run tides
@@ -51,7 +63,7 @@ run_tides <- function(force_run = FALSE, mws = FALSE) {
     script_tiddlers <- script_tiddlers[order(script_tiddlers$tide_order), ]
 
     if(!force_run) {
-      script_tiddlers <- script_tiddlers[!grepl("DoNotRun", script_tiddlers$tags, fixed = TRUE), ]
+      script_tiddlers <- script_tiddlers[!grepl("DoNotRun", tags, fixed = TRUE), ]
     }
 
     # Run script tiddlers

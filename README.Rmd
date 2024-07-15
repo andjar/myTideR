@@ -13,7 +13,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# myTideR
+# myTideR: Gotta Tiddl' Em All!
 
 The goal of myTideR is to use R to expand your TiddlyWiki through automatic actions called tides. To see it in action, please see this demonstration of an early version: <https://www.youtube.com/watch?v=kBH73OoaL9o>
 

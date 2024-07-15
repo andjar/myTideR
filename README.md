@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# myTideR
+# myTideR: Gotta Tiddl’ Em All!
 
 The goal of myTideR is to use R to expand your TiddlyWiki through
 automatic actions called tides. To see it in action, please see this
