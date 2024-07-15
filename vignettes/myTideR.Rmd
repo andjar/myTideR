@@ -130,7 +130,7 @@ Note: You need to install the `single-file cli` on your system!
 
 ### The Mail tide
 
-The mail tide is quite similar to the file tide; drag-and-drop mails from outlook (`.msg`) to the `inbox` folder, and the tide will create a tiddler for the mail itself and archive the attachments (run the file tide).
+The mail tide is quite similar to the file tide; drag-and-drop mails from outlook (`.msg`) to the `inbox` folder, and the tide will create a tiddler for the mail itself and archive the attachments (run the file tide). This tide requires the [https://github.com/hrbrmstr/msgxtractr](msgxtractr package).
 
 Please note: The `tide_order` field ensures that the mail tide runs *before* the file tide.
 
